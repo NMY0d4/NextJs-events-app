@@ -1,7 +1,9 @@
-import React from 'react'
+import React from 'react';
 
 export default function FilteredEvents() {
   return (
-    <div>Filtered Events</div>
-  )
+    <div>
+      <h1>Filtered Events</h1>
+    </div>
+  );
 }
