@@ -6,7 +6,7 @@ export default function MainHeader() {
   return (
     <header className={styles.header}>
       <div className={styles.logo}>
-        <Link href='/'>NexEvents</Link>
+        <Link href='/'>NextEvents</Link>
       </div>
       <nav className={styles.navigation}>
         <ul>
