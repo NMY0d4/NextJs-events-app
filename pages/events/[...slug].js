@@ -7,6 +7,7 @@ import { getFilteredEvents } from '../../helpers/api-util';
 import ResultsTitle from '../../components/events/results-title';
 import Button from '../../components/ui/button';
 import ErrorAlert from '../../components/ui/error-alert';
+import Head from 'next/head';
 
 export default function FilteredEvents() {
   const [loadedEvents, setLoadedEvents] = useState([]);
@@ -87,6 +88,13 @@ export default function FilteredEvents() {
 
   return (
     <Fragment>
+      <Head>
+        <title>Filtered Events</title>
+        <meta
+          name='description'
+          content={`All events for ${filteredMonth}/${filteredYear}`}
+        />
+      </Head>
       <ResultsTitle date={date} />
       <EventList items={filteredEvents} />
     </Fragment>

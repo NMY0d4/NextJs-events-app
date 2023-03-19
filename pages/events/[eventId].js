@@ -4,9 +4,9 @@ import EventSummary from '../../components/events/event-summary';
 import EventContent from '../../components/events/event-content';
 import { getEventById, getFeaturedEvents } from '../../helpers/api-util';
 import ErrorAlert from '../../components/ui/error-alert';
+import Head from 'next/head';
 
 export default function Event({ event }) {
-
   if (!event) {
     return (
       <div className='center'>
@@ -17,6 +17,13 @@ export default function Event({ event }) {
 
   return (
     <Fragment>
+      <Head>
+        <title>{event.title}</title>
+        <meta
+          name='description'
+          content={event.description}
+        />
+      </Head>
       <EventSummary title={event.title} />
       <EventLogistics
         date={event.date}
@@ -30,7 +37,6 @@ export default function Event({ event }) {
 }
 
 export async function getStaticProps(context) {
-  
   const { eventId } = context.params;
 
   const event = await getEventById(eventId);
