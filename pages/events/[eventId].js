@@ -5,6 +5,7 @@ import EventContent from '../../components/events/event-content';
 import { getEventById, getFeaturedEvents } from '../../helpers/api-util';
 import ErrorAlert from '../../components/ui/error-alert';
 import Head from 'next/head';
+import Comments from '../../components/input/comments';
 
 export default function Event({ event }) {
   if (!event) {
@@ -19,10 +20,7 @@ export default function Event({ event }) {
     <Fragment>
       <Head>
         <title>{event.title}</title>
-        <meta
-          name='description'
-          content={event.description}
-        />
+        <meta name='description' content={event.description} />
       </Head>
       <EventSummary title={event.title} />
       <EventLogistics
@@ -32,6 +30,7 @@ export default function Event({ event }) {
         imageAlt={event.title}
       />
       <EventContent>{event.description}</EventContent>
+      <Comments eventId={event.id} />
     </Fragment>
   );
 }
