@@ -1,49 +1,56 @@
-export default function handler(req, res) {
-  const { eventId } = req.query;
-  if (req.method === 'POST') {
-    // add server side validation
-    const { email, name, text } = req.body;
+import { connectDatabase, insertDocument } from '../../../helpers/db-util';
+import { MongoClient } from 'mongodb';
+require('dotenv').config();
 
-    if (
-      !email.includes('@') ||
-      !name ||
-      name.trim() === '' ||
-      !text ||
-      text.trim() === ''
-    ) {
-      res.status(422).json({ message: 'Invalid input.' });
-      return;
+export default async function handler(req, res) {
+  const { eventId } = req.query;
+  try {
+    const client = await connectDatabase();
+
+    const db = client.db();
+
+    if (req.method === 'POST') {
+      // add server side validation
+      const { email, name, text } = req.body;
+
+      if (
+        !email.includes('@') ||
+        !name ||
+        name.trim() === '' ||
+        !text ||
+        text.trim() === ''
+      ) {
+        res.status(422).json({ message: 'Invalid input.' });
+        return;
+      }
+
+      const newComment = {
+        email,
+        name,
+        text,
+        eventId,
+      };
+
+      const result = await insertDocument(client, 'comments', newComment);
+
+      newComment._id = result.insertedId;
+      
+      res.status(201).json({ message: 'Added comment.', comment: newComment });
     }
 
-    console.log(email, name, text);
-    const newComment = {
-      id: new Date().toISOString(),
-      email,
-      name,
-      text,
-    };
+    if (req.method === 'GET') {
+      const docs = await db
+        .collection('comments')
+        .find()
+        .sort({ _id: -1 })
+        .toArray();
 
-    console.log(newComment);
-
-    res.status(201).json({ message: 'Added comment.', comment: newComment });
+      res.status(200).json({ comments: docs });
+    }
+  } catch (error) {
+    res.status(500).json(`api/comments error db : $(err.message)`);
+    return;
   }
 
-  if (req.method === 'GET') {
-    const dummyList = [
-      {
-        id: 'c1',
-        name: 'Grégory',
-        email: 'test1@test.com',
-        comment: 'first comment test',
-      },
-      {
-        id: 'c2',
-        name: 'Sarah',
-        email: 'test2@test.com',
-        comment: 'blabla bla bla et blabla',
-      },
-    ];
-
-    res.status(200).json({ comments: dummyList });
-  }
+  client.close();
 }

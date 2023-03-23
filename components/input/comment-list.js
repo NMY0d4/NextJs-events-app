@@ -1,12 +1,13 @@
 import classes from './comment-list.module.css';
 
+
 function CommentList({ comments }) {
   return (
     <ul className={classes.comments}>
       {/* Render list of comments - fetched from API */}
       {comments.map((comment) => (
-        <li key={comment.id}>
-          <p>{comment.comment}</p>
+        <li key={comment._id}>
+          <p>{comment.text}</p>
           <div>
             By <address>{comment.name}</address>
           </div>
