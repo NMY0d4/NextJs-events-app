@@ -8,8 +8,8 @@ function NewComment(props) {
   const nameInputRef = useRef();
   const commentInputRef = useRef();
 
-  function sendCommentHandler(event) {
-    event.preventDefault();
+  function sendCommentHandler(e) {
+    e.preventDefault();
 
     const enteredEmail = emailInputRef.current.value;
     const enteredName = nameInputRef.current.value;
@@ -27,16 +27,19 @@ function NewComment(props) {
       setIsInvalid(true);
       return;
     }
-
     props.onAddComment({
       email: enteredEmail,
       name: enteredName,
       text: enteredComment,
     });
+    
+    emailInputRef.current.value = '';
+    nameInputRef.current.value = '';
+    commentInputRef.current.value = '';
   }
 
   return (
-    <form className={classes.form}>
+    <form className={classes.form} onSubmit={sendCommentHandler}>
       <div className={classes.row}>
         <div className={classes.control}>
           <label htmlFor='email'>Your email</label>
