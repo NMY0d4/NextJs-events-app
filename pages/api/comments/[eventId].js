@@ -1,13 +1,13 @@
-import { connectDatabase, insertDocument } from '../../../helpers/db-util';
-import { MongoClient } from 'mongodb';
-require('dotenv').config();
+import {
+  connectDatabase,
+  insertDocument,
+  getAllDocuments,
+} from '../../../helpers/db-util';
 
 export default async function handler(req, res) {
-  const { eventId } = req.query;
   try {
+    const { eventId } = req.query;
     const client = await connectDatabase();
-
-    const db = client.db();
 
     if (req.method === 'POST') {
       // add server side validation
@@ -34,23 +34,21 @@ export default async function handler(req, res) {
       const result = await insertDocument(client, 'comments', newComment);
 
       newComment._id = result.insertedId;
-      
       res.status(201).json({ message: 'Added comment.', comment: newComment });
     }
 
     if (req.method === 'GET') {
-      const docs = await db
-        .collection('comments')
-        .find()
-        .sort({ _id: -1 })
-        .toArray();
+      const docs = await getAllDocuments(
+        client,
+        'comments',
+        { _id: -1 },
+        { eventId: eventId }
+      );
 
       res.status(200).json({ comments: docs });
     }
-  } catch (error) {
-    res.status(500).json(`api/comments error db : $(err.message)`);
-    return;
+  } catch (err) {
+    res.status(500).json(`api/comments error db : ${err.message}`);
   }
-
   client.close();
 }

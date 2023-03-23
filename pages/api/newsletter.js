@@ -12,12 +12,11 @@ export default async function handler(req, res) {
     try {
       const client = await connectDatabase();
       await insertDocument(client, 'newsletter', { email: userEmail });
-      client.close();
     } catch (err) {
-      res.status(500).json(`api/newsletter error db : $(err.message)`);
-      return;
+      res.status(500).json(`api/newsletter error db : ${err.message}`);
     }
 
+    client.close();
     res.status(201).json({ message: 'Signed up!' });
   }
 }
