@@ -5,9 +5,10 @@ import {
 } from '../../../helpers/db-util';
 
 export default async function handler(req, res) {
+  let client;
   try {
     const { eventId } = req.query;
-    const client = await connectDatabase();
+    client = await connectDatabase();
 
     if (req.method === 'POST') {
       // add server side validation
