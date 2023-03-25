@@ -5,9 +5,7 @@ import NotificationContext from '../../store/notification-context';
 function NewsletterRegistration() {
   const emailRef = useRef();
 
-  const notificationCtx = useContext(NotificationContext);
-
-  const { showNotification } = notificationCtx;
+  const { showNotification } = useContext(NotificationContext);
 
   function registrationHandler(e) {
     e.preventDefault();
@@ -27,13 +25,14 @@ function NewsletterRegistration() {
       },
     })
       .then((res) => {
-        if (!res.ok)
+        if (!res.ok) {
           res.json().then((data) => {
             throw new Error(data.message);
           });
+        }
         return res.json();
       })
-      .then((data) => {
+      .then(() => {
         showNotification({
           title: 'Success!',
           message: 'Successfully registered for newsletter!',
