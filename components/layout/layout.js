@@ -5,18 +5,22 @@ import NotificationContext from '../../store/notification-context';
 
 export default function Layout({ children }) {
   const notificationCtx = useContext(NotificationContext);
+  let displayNotification = null;
 
   const activeNotification = notificationCtx.notification;
 
-  const { title, message, status } = activeNotification;
+  if (activeNotification) {
+    const { title, message, status } = activeNotification;
+    displayNotification = (
+      <Notification title={title} message={message} status={status} />
+    );
+  }
 
   return (
     <Fragment>
       <MainHeader />
       <main>{children}</main>
-      {activeNotification && (
-        <Notification title={title} message={message} status={status} />
-      )}
+      {displayNotification}
     </Fragment>
   );
 }
